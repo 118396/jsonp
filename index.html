@@ -1,0 +1,59 @@
+<title>首页</title>
+<h5>您的账户余额是 <span id="amount">&&&amount&&&</span></h5><!-- &&&amount&&&是一个随便编的占位符 //-->
+<button id="button">打钱</button>
+<script>
+    window.xxx = function(result){
+        if(result === 'success'){
+            amount.innerText = amount.innerText - 1
+        }
+    }
+    button.addEventListener('click', (e)=>{
+        let script = document.createElement('script')
+        script.src = 'http://localhost:8002/pay?callback=xxx'//请求的路径  当做script引入的
+    document.body.appendChild(script)
+    script.onload = function(e){//监听
+        e.currentTarget.remove()
+    }
+    script.onerror = function(){
+        alert('fail')
+        e.currentTarget.remove()
+    }//不管成功还是失败 都会将页面生成的新的 script 删掉，因为代码执行了，script 就没用了
+     //但是 script 的变量还是在的，存在内存里面的
+     //  SRJ Server rendered javascript：服务器返回的javascript 
+
+
+//当用户点击一个动作的时候，生成一个script，script 请求的路径/pay，
+//然后把这个script方到页面里面，浏览器就会发起一个这个路径的 get 请求（没有办法 post 需要端口）
+//如果请求成功了，首先会执行服务器返回的javascript 的响应。
+//响应是操作页面局部的刷新（服务器里面的代码）
+
+//('amount.innerText = amount.innerText - 1')
+//为什么这段代码会被当做js执行，是基于http协议
+
+  //(服务器里面的代码)response.setHeader('Content-Type','application/javascript')//自己说了是javascript
+//（html代码）script.src = '/pay'   //前端是把它放在  script 标签里面的，浏览器会认为是一个刚刚创建的 javascript，执行它
+
+
+
+
+
+
+    //let n = amount.innerText// n的类型是:字符串
+   // let number = parseInt(n, 10) 
+    //正整数 10进制,想把字符串变成 number ，小技巧：用字符串减一个数字(n - 1)或者变成正n（+n）
+    //let newNumber = number - 1 //把数字减一放在一个新的Number
+   // amount.innerText = newNumber //把新的Nunber放在innerText
+    })
+</script>
+
+
+
+
+
+<!--<button id="button">付钱1块钱</button>
+<form action="/pay" method="POST" target="result">
+    <input type="submit" value="付款">
+</form>
+<iframe name="result" src="about:blank" frameborder="0" height=200></iframe>-->
+
+
